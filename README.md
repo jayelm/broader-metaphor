@@ -6,6 +6,19 @@ Code and data for "Learning Outside the Box: Discourse-level Features Improve Me
 
 ## Reproduction
 
+In general, to reproduce the results in the paper, you do the following:
+
+1. Run an `extract_*.py` script to generate a numpy features file in
+   `features/` which contains embeddings for lemmas, arguments, contexts, and
+   gold labels;
+2. Run `python classify.py PATH_TO_FEATURES` which does classification with
+   XGBoost and prints overall and per-genre performance to `stdout`,
+   significance tests comparing LAC vs LA and LA vs A models, and saves
+   predictions (with the columns `y_pred_l`, `y_pred_la`, and `y_pred_lac`) to
+   the `analysis/` folder.
+
+Specific instructions and requirements for each model follow.
+
 ### GloVe
 
 Classification with GloVe vectors requires spaCy's `en_vectors_web_lg` model,
@@ -16,6 +29,8 @@ which can be downloaded via
 Then run
 
     python extract_glove.py
+
+to produce `features/glove.npz`.
 
 ### doc2vec
 
@@ -29,4 +44,43 @@ Then run
 
     python extract_doc2vec.py
 
-(will take a while)
+(will take a while) to produce `features/doc2vec.npz`.
+
+### skip-thought
+
+This also depends on `python2.7`. Clone the skip-thoughts submodule:
+
+    git submodule init && git submodule update
+
+Download the pretrained skip-thoughts models from
+[ryankiros/skip-thoughts](https://github.com/ryankiros/skip-thoughts):
+
+    cd models
+    mkdir skipthoughts && cd skipthoughts
+    wget http://www.cs.toronto.edu/~rkiros/models/dictionary.txt
+    wget http://www.cs.toronto.edu/~rkiros/models/utable.npy
+    wget http://www.cs.toronto.edu/~rkiros/models/btable.npy
+    wget http://www.cs.toronto.edu/~rkiros/models/uni_skip.npz
+    wget http://www.cs.toronto.edu/~rkiros/models/uni_skip.npz.pkl
+    wget http://www.cs.toronto.edu/~rkiros/models/bi_skip.npz
+    wget http://www.cs.toronto.edu/~rkiros/models/bi_skip.npz.pkl
+
+Update `path_to_models` and `path_to_tables` in `skip-thoughts/skipthoughts.py`
+to `./models/skipthoughts/`
+
+Then run
+
+    python extract_skipthought.py
+
+(will take a while) to produce `features/skipthought.npz`.
+
+### ELMo
+
+This depends on `allennlp`: `pip install allennlp`.
+
+Then run
+
+    python extract_elmo.py
+
+to extract ELMo embeddings (will download and cache the ELMo model) and save
+them to `features/elmo.npz`.

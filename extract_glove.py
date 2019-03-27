@@ -1,5 +1,5 @@
 """
-Extract GloVe vectors for metaphor identification
+Extract GloVe embeddings for metaphor identification
 """
 
 import pandas as pd

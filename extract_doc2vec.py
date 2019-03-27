@@ -1,5 +1,5 @@
 """
-Extract doc2vec metaphors for metaphor identification
+Extract doc2vec embeddings for metaphor identification
 """
 
 import pandas as pd
