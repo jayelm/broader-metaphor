@@ -105,3 +105,6 @@ venv.bak/
 
 features/*
 !features/README.md
+
+models/*
+!models/README.md
