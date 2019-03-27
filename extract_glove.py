@@ -10,6 +10,10 @@ import re
 import numpy as np
 from tqdm import tqdm
 
+
+HIDDEN_DIM_SIZE = 300
+
+
 def custom_tokenizer(nlp):
     infix_re = re.compile(r'''[.\,\?\:\;\...\‘\’\`\“\”\"\'~]''')
     prefix_re = compile_prefix_regex(nlp.Defaults.prefixes)
@@ -20,7 +24,6 @@ def custom_tokenizer(nlp):
                                 infix_finditer=infix_re.finditer,
                                 token_match=None)
 
-HIDDEN_DIM_SIZE = 300
 
 if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
