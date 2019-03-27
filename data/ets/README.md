@@ -4,7 +4,7 @@ This is the Educational Testing Service train/test split of the VU Amsterdam
 Metaphor corpus for the 2018 NAACL shared task on verbs detection, with some
 files concatenated and simplified.
 
-To recreate these files, download `verbs-datasets.zip` and `naacl_flp_test_gold_labels.zip` from [https://github.com/EducationalTestingService/metaphor/releases](https://github.com/EducationalTestingService/metaphor/releases).
+To recreate these files, download `verbs-datasets.zip` and `naacl_flp_test_gold_labels.zip` from [EducationalTestingService/metaphor](https://github.com/EducationalTestingService/metaphor/releases).
 Directions for recreating these files are below their descriptions.
 
 ## File descriptions
