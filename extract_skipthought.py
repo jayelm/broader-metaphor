@@ -23,6 +23,11 @@ def infer_vector_skipthought(m, documents):
     return return_arr
 
 
+@np.vectorize
+def decode(x):
+    return x.decode('utf8')
+
+
 if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -34,11 +39,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    vuamc = pd.read_csv('./data/amsterdam_processed/vuamc.csv',
+    vuamc = pd.read_csv('./data/vuamc.csv',
                         keep_default_na=False)
 
-    unique_ctx = vuamc.min_context.unique()
-    import pdb; pdb.set_trace()
+    unique_ctx = decode(vuamc.min_context.unique())
     ctx_embs = infer_vector_skipthought(m, unique_ctx)
 
     ctx_to_idx = {ctx: i for i, ctx in enumerate(unique_ctx)}
@@ -49,9 +53,9 @@ if __name__ == '__main__':
     vuamc_rows_to_idxs = np.zeros(vuamc.shape[0], dtype=np.int32)
 
 
-    v_embs = infer_vector_skipthought(m, vuamc.verb_lemma)
-    s_embs = infer_vector_skipthought(m, vuamc.subject)
-    o_embs = infer_vector_skipthought(m, vuamc.object)
+    v_embs = infer_vector_skipthought(m, decode(vuamc.verb_lemma))
+    s_embs = infer_vector_skipthought(m, decode(vuamc.subject))
+    o_embs = infer_vector_skipthought(m, decode(vuamc.object))
 
     for i, row in tqdm(vuamc.iterrows(), total=vuamc.shape[0]):
         ctx_idx = ctx_to_idx[row.min_context]
