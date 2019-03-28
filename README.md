@@ -44,7 +44,7 @@ Then run
 
     python extract_doc2vec.py
 
-(will take a while) to produce `features/doc2vec.npz`.
+to produce `features/doc2vec.npz`.
 
 ### skip-thought
 
@@ -84,3 +84,17 @@ Then run
 
 to extract ELMo embeddings (will download and cache the ELMo model) and save
 them to `features/elmo.npz`.
+
+## Citation
+
+If this code is useful to you, please cite
+
+```
+@inproceedings{mu2019learning,
+  author    = {Jesse Mu, Noah Goodman, Helen Yannakoudakis, and Ekaterina Shutova},
+  title     = {Learning Outside the Box: Discourse-level Features Improve
+  Metaphor Identification},
+  booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers)},
+  year      = {2019}
+  }
+```
