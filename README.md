@@ -80,10 +80,10 @@ This depends on `allennlp`: `pip install allennlp`.
 
 Then run
 
-    python extract_elmo.py
+    python extract_elmo.py --cuda 0
 
 to extract ELMo embeddings (will download and cache the ELMo model) and save
-them to `features/elmo.npz`.
+them to `features/elmo.npz`. A GPU and the `--cuda DEVICE_ID` flag is strongly recommended to speed up processing from several hours to an hour.
 
 ## Citation
 
