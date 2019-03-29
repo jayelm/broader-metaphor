@@ -65,6 +65,9 @@ Download the pretrained skip-thoughts models from
     wget http://www.cs.toronto.edu/~rkiros/models/bi_skip.npz
     wget http://www.cs.toronto.edu/~rkiros/models/bi_skip.npz.pkl
 
+Update `path_to_models` and `path_to_tables` in `skip-thoughts/skipthoughts.py`
+to `./models/skipthoughts/`
+
 Then run
 
     python extract_skipthought.py
