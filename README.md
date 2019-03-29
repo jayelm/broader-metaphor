@@ -124,9 +124,7 @@ to produce `features/skipthought.npz`.
 
 ### ELMo
 
-This depends on `allennlp`: `pip install allennlp`.
-
-Then run
+With `allennlp` installed, run
 
     python extract_elmo.py --cuda 0
 
