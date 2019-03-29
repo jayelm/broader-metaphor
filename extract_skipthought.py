@@ -41,8 +41,9 @@ if __name__ == '__main__':
 
     vuamc = pd.read_csv('./data/vuamc.csv',
                         keep_default_na=False)
+    vuamc.min_context = decode(vuamc.min_context)
 
-    unique_ctx = decode(vuamc.min_context.unique())
+    unique_ctx = vuamc.min_context.unique()
     ctx_embs = infer_vector_skipthought(m, unique_ctx)
 
     ctx_to_idx = {ctx: i for i, ctx in enumerate(unique_ctx)}
