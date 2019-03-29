@@ -95,7 +95,7 @@ to produce `features/doc2vec.npz`.
 
 This requires `python2.7`, since
 [rkiros/skipthoughts](https://github.com/ryankiros/skip-thoughts) requires 2.7,
-and also depends on the depenencies of that module (see rkiros' `README.md`)
+and also depends on the dependencies of that module (see rkiros' `README.md`)
 Clone the skip-thoughts submodule:
 
     git submodule init && git submodule update
