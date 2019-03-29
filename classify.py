@@ -85,7 +85,7 @@ def preprocess(all_features, features, n_dev=500, seed=None):
 
 
 def classify_vuamc(all_features, features_to_use, classifier=xgb.XGBClassifier,
-                   n_dev=500, seed=0,
+                   n_dev=0, seed=0,
                    classifier_args=None):
     if classifier_args is None:
         classifier_args = {}
@@ -170,6 +170,7 @@ if __name__ == '__main__':
 
     parser.add_argument('features_file', help='Path to .npz features file')
     parser.add_argument('--n_jobs', default=4, type=int, help='How many jobs to use')
+    parser.add_argument('--n_dev', default=500, type=int, help='How many dev examples to sample')
     parser.add_argument('--seed', default=0, type=int, help='Random seed')
 
     args = parser.parse_args()
@@ -178,6 +179,7 @@ if __name__ == '__main__':
 
     print("====L (LEMMA)====")
     F, stats = classify_vuamc(features, ['v_embs'],
+                              n_dev=args.n_dev,
                               classifier_args={'n_jobs': args.n_jobs},
                               seed=args.seed)
     train_idx = F['train_idx']
@@ -188,6 +190,7 @@ if __name__ == '__main__':
     print("\n====LA (LEMMA + ARGS)====")
     F, stats = classify_vuamc(features,
                               ['v_embs', 's_embs', 'o_embs'],
+                              n_dev=args.n_dev,
                               classifier_args={'n_jobs': args.n_jobs},
                               seed=args.seed)
     assert np.all(train_idx == F['train_idx'])
@@ -199,6 +202,7 @@ if __name__ == '__main__':
 
     print("\n====LAC (LEMMA + ARGS + CONTEXT)====")
     F, stats = classify_vuamc(features, ['v_embs', 's_embs', 'o_embs', 'ctx_embs'],
+                              n_dev=args.n_dev,
                               classifier_args={'n_jobs': args.n_jobs},
                               seed=args.seed)
     y_pred_test_lac = F['y_pred_test']
