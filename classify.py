@@ -10,7 +10,7 @@ from scipy.stats import binom
 import pandas as pd
 
 
-def preprocess(all_features, features, n_dev=500, seed=None):
+def preprocess(all_features, features, n_dev=0, seed=None):
     if seed is not None:
         np.random.seed(seed)
 
@@ -169,8 +169,8 @@ if __name__ == '__main__':
         formatter_class=ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('features_file', help='Path to .npz features file')
-    parser.add_argument('--n_jobs', default=4, type=int, help='How many jobs to use')
-    parser.add_argument('--n_dev', default=500, type=int, help='How many dev examples to sample')
+    parser.add_argument('--n_jobs', default=4, type=int, help='How many workers to use')
+    parser.add_argument('--n_dev', default=0, type=int, help='How many dev examples to sample')
     parser.add_argument('--seed', default=0, type=int, help='Random seed')
 
     args = parser.parse_args()
@@ -211,13 +211,16 @@ if __name__ == '__main__':
     print(test_signif(y_pred_test_la, y_pred_test_lac, F['y_test']))
 
     # Save dev set predictions
-    vuamc = pd.read_csv('./data/vuamc.csv')
-    vuamc_dev = vuamc.iloc[F['dev_idx']].copy()
-    vuamc_dev['y_pred_l'] = y_pred_dev_l
-    vuamc_dev['y_pred_la'] = y_pred_dev_la
-    vuamc_dev['y_pred_lac'] = y_pred_dev_lac
+    if args.n_dev:
+        vuamc = pd.read_csv('./data/vuamc.csv')
+        vuamc_dev = vuamc.iloc[F['dev_idx']].copy()
+        vuamc_dev['y_pred_l'] = y_pred_dev_l
+        vuamc_dev['y_pred_la'] = y_pred_dev_la
+        vuamc_dev['y_pred_lac'] = y_pred_dev_lac
 
-    dev_perf_fname = os.path.join('analysis', '{}_dev_predictions.csv'.format(
-        os.path.splitext(os.path.basename(args.features_file))[0]))
-    print("Saving dev predictions to {}".format(dev_perf_fname))
-    vuamc_dev.to_csv(dev_perf_fname, index=False)
+        dev_perf_fname = os.path.join('analysis', '{}_dev_predictions.csv'.format(
+            os.path.splitext(os.path.basename(args.features_file))[0]))
+        print("Saving dev predictions to {}".format(dev_perf_fname))
+        vuamc_dev.to_csv(dev_perf_fname, index=False)
+    else:
+        print("No dev set specified, not saving dev predictions...")
