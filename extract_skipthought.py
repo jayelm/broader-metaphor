@@ -32,7 +32,7 @@ if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
     parser = ArgumentParser(
-        description='Extract GloVe vectors with Spacy',
+        description='Extract skipthought vectors',
         formatter_class=ArgumentDefaultsHelpFormatter)
 
     m = skipthoughts.Encoder(skipthoughts.load_model())

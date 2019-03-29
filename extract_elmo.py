@@ -65,7 +65,7 @@ if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
     parser = ArgumentParser(
-        description='description',
+        description='Extract ELMo embeddings',
         formatter_class=ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('--cuda', type=int, default=-1)

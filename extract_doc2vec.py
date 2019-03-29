@@ -16,13 +16,12 @@ if __name__ == '__main__':
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
     parser = ArgumentParser(
-        description='Extract GloVe vectors with Spacy',
+        description='Extract doc2vec vectors',
         formatter_class=ArgumentDefaultsHelpFormatter)
 
+    args = parser.parse_args()
 
     m = g.Doc2Vec.load('models/enwiki_dbow/doc2vec.bin')
-
-    args = parser.parse_args()
 
     vuamc = pd.read_csv('./data/vuamc.csv',
                         keep_default_na=False)
