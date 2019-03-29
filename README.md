@@ -4,18 +4,63 @@ Code and data for "Learning Outside the Box: Discourse-level Features Improve Me
 
 ## Getting started
 
+- `analysis/` contains dev set predictions made by the models in the paper, as
+    well as an RMarkdown script which investigates the ELMo model specifically.
+- `data/` contains the original `VUAMC.xml` file, and `vuamc.csv`,a  processed
+  version with additional context + arguments. For details on how to reproduce
+  `VUAMC.csv`, see `data/README.md`.
+- `features/` is empty and will contain the extracted model features generated
+    by the `extract_*.py` scripts. Contact me if you're lazy and just want to
+    run classification with the features outright.
+- `models/` is empty and will contain pretrained doc2vec and skip-thought
+    models if you want to reproduce those results. (Pretrained embeddings for
+    GloVe and ELMo are handled by spaCy and allennlp, respectively; see below)
+- `skip-thoughts/` just links to
+    [rkiros/skipthoughts](https://github.com/ryankiros/skip-thoughts).
+- `classify.py` is the main XGBoost classification script.
+- `extract_*.py` are the scripts used to generate classification features.
+
+Most of this codebase was tested with Python 3.6 and the following
+dependencies:
+
+- `xgboost==0.80`
+- `tqdm==4.28.1`
+- `sklearn==0.19.1`
+- `scipy==1.1.0`
+- `numpy==1.14.3`
+- `pandas==0.23.4`
+- `spacy==2.0.18`
+- `allennlp==0.7.1` (for `extract_elmo.py` only)
+
+for reproducing `vuamc.csv` with `data/parse_vuamc.py`:
+
+- `beautifulsoup4==4.6.3`
+- `pycorenlp==0.3.0`
+- `gensim==3.5.0`
+- and the Java Stanford CoreNLP version `3.9.2` (2018-10-05).
+
+Unfortunately, some of the codebase (to generate doc2vec and skipthought
+vectors) requires Python 2.7 due to pretrained models and code depending on
+2.7. They also may depend on the corresponding version 2.xx packages. See below
+for details on how to reproduce each result, and open a GitHub issue if you
+have trouble.
+
 ## Reproduction
 
-In general, to reproduce the results in the paper, you do the following:
+In general, to reproduce the results in the paper, do the following:
 
-1. Run an `extract_*.py` script to generate a numpy features file in
+1. Run `python extract_*.py` to generate a numpy features file in
    `features/` which contains embeddings for lemmas, arguments, contexts, and
    gold labels;
 2. Run `python classify.py PATH_TO_FEATURES` which does classification with
-   XGBoost and prints overall and per-genre performance to `stdout`,
-   significance tests comparing LAC vs LA and LA vs A models, and saves
+   XGBoost and prints overall and per-genre performance to `stdout` and
+   significance tests comparing LAC vs LA and LA vs A models.
+3. To examine a subset of the predictions made by the model, run `classify.py`
+   with `--n_dev 500`. This will save a subset of `vuamc.csv` with model
    predictions (with the columns `y_pred_l`, `y_pred_la`, and `y_pred_lac`) to
-   the `analysis/` folder.
+   the `analysis/` folder. Due to seeding (`-seed 0`) the sampled examples
+   should be the same as the ones already contained in `analysis/` (though
+   the predictions may not be). Reported performance will also differ slightly.
 
 Specific instructions and requirements for each model follow.
 
@@ -48,7 +93,10 @@ to produce `features/doc2vec.npz`.
 
 ### skip-thought
 
-This also depends on `python2.7`. Clone the skip-thoughts submodule:
+This requires `python2.7`, since
+[rkiros/skipthoughts](https://github.com/ryankiros/skip-thoughts) requires 2.7,
+and also depends on the depenencies of that module (see rkiros' `README.md`)
+Clone the skip-thoughts submodule:
 
     git submodule init && git submodule update
 
@@ -72,7 +120,7 @@ Then run
 
     python extract_skipthought.py
 
-(will take a while) to produce `features/skipthought.npz`.
+to produce `features/skipthought.npz`.
 
 ### ELMo
 
@@ -83,7 +131,8 @@ Then run
     python extract_elmo.py --cuda 0
 
 to extract ELMo embeddings (will download and cache the ELMo model) and save
-them to `features/elmo.npz`. A GPU and the `--cuda DEVICE_ID` flag is strongly recommended to speed up processing from several hours to an hour.
+them to `features/elmo.npz`. A GPU and the `--cuda DEVICE_ID` flag is strongly
+recommended to speed up processing from several hours to an hour-ish.
 
 ## Citation
 
