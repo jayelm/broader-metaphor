@@ -5,10 +5,8 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(knitr)
-library(ggplot2)
 ```
 
 Read in all dev set predictions:
