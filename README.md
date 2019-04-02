@@ -20,6 +20,10 @@ Code and data for "Learning Outside the Box: Discourse-level Features Improve Me
 - `classify.py` is the main XGBoost classification script.
 - `extract_*.py` are the scripts used to generate classification features.
 
+Each folder has a corresponding README with more details.
+
+## Dependencies
+
 Most of this codebase was tested with Python 3.6 and the following
 dependencies:
 
@@ -44,6 +48,8 @@ vectors) requires Python 2.7 due to pretrained models and code depending on
 2.7. They also may depend on the corresponding version 2.xx packages. See below
 for details on how to reproduce each result, and open a GitHub issue if you
 have trouble.
+
+Finally, to reproduce the ELMo dev analysis located in `analysis/elmo_dev_analysis.Rmd`, I recommend using RStudio to knit the RMarkdown file. Dependencies are `tidyverse` and `knitr`.
 
 ## Reproduction
 
@@ -138,10 +144,9 @@ If this code is useful to you, please cite
 
 ```
 @inproceedings{mu2019learning,
-  author    = {Jesse Mu, Noah Goodman, Helen Yannakoudakis, and Ekaterina Shutova},
-  title     = {Learning Outside the Box: Discourse-level Features Improve
-  Metaphor Identification},
+  author    = {Jesse Mu, Helen Yannakoudakis, and Ekaterina Shutova},
+  title     = {Learning Outside the Box: Discourse-level Features Improve Metaphor Identification},
   booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers)},
   year      = {2019}
-  }
+}
 ```
