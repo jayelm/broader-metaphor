@@ -1,0 +1,151 @@
+---
+title: "ELMo dev set analysis"
+author: "Jesse Mu"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+```
+
+Read in all dev set predictions:
+
+```{r load_data, message=FALSE}
+dev <- read_csv('elmo_dev_predictions.csv') %>%
+  mutate(id = seq_along(fold_no))
+```
+
+These annotations are from me manually annotating the 100 sampled dev examples + additional examples extracted from the model errors analysis below
+
+```{r annotations}
+# Requires paragraph-level context or more
+beyond <- c(
+  310, 348, 282, 311, 359, 485, 332, 313, 299, 357, 493,
+  261, 300, 20, 185, 256, 27, 476, 268, 239, 234, 415, 324, 163, 353, 249,
+  352, 150, 250, 343, 320
+)
+# Understandable with sentence context
+sentence <- c(
+  133, 286, 452, 101, 445, 467, 326, 31, 496, 375, 242, 480, 482, 7, 181, 411, 161, 227, 231, 489, 50, 335, 190, 378,
+  253, 360, 11, 215, 197, 180, 402, 129, 202, 146, 113, 37, 460, 361, 143, 203, 380, 367, 405, 183, 315, 479,
+  59, 99, 475, 79, 216, 331, 42, 391, 174, 346, 424, 62, 124, 38, 429, 430, 78, 500, 21, 96, 478, 90, 61, 351, 281, 381, 468, 414, 107, 154, 488, 74, 421, 383, 94, 484, 121, 123, 290, 104, 425, 458, 196, 439, 240, 403, 448, 306, 176, 251, 225, 397, 9, 34, 276, 370, 175, 88, 356, 91, 473, 382, 486, 138, 304, 495, 487
+)
+# Understandable with arguments only
+args <- c(
+  186, 87, 336, 188, 184, 374, 449, 102, 312, 60, 128, 386, 369, 298,
+  217, 387, 110, 32, 45, 141, 230, 293, 284, 208, 497, 437, 149, 165,
+  329, 168, 136, 85, 295, 51, 25, 263, 317, 323, 166, 243,
+  147, 116, 41, 432, 466, 137, 6, 302, 453, 426, 191, 189, 54, 64, 218, 213, 23, 232, 206, 148, 24, 119, 127, 56, 309, 308, 233, 134, 198, 236, 140, 97, 58, 338, 274, 98, 379, 22, 46, 125, 35, 266, 39, 47, 72, 75, 103, 396, 66, 132, 292, 438, 153, 82, 130, 481, 455, 440, 106, 245, 390
+)
+
+annots <- data.frame(
+  id = c(beyond, sentence, args),
+  ctx_label = c(rep('beyond', length(beyond)), rep('sentence', length(sentence)), rep('args', length(args)))
+)
+dev <- dev %>%
+  left_join(annots, by = 'id')  # Add the annotations
+```
+
+Sample 100 examples
+
+```{r sample_dev}
+set.seed(1)
+dev100 <- dev %>%
+  sample_n(100)
+
+dev100 %>% head(5) %>% select(id, sentence, min_context, verb, subject, object, y, y_pred_l, y_pred_la, y_pred_lac, ctx_label) %>% kable
+```
+
+## Table 4 (Overall row)
+
+Context required by the 100 sampled dev examples:
+
+```{r dev_context_reqd}
+dev100 %>% group_by(ctx_label) %>%
+  summarise(count = n()) %>%
+  kable
+```
+
+Here are the 11 "beyond" contexts. These examples are quite noisy, including some annotation errors and examples where not even the paragraph-level context is sufficient to resolve the metaphor:
+
+```{r beyond_contexts}
+dev100 %>%
+  filter(ctx_label == 'beyond') %>%
+  select(id, sentence, min_context, verb, subject, object, y, y_pred_l, y_pred_la, y_pred_lac, ctx_label) %>%
+  kable
+```
+
+## Table 4 (Model rows)
+
+Sample errors from the 500 dev examples, and categorize them according to context required. I'm sampling more examples from the 500 dev, some of which overlap with the 100 sample above, but new examples I also annotated just like the original annotations (coded into `annots` above).
+
+### L
+
+```{r l_context_reqd}
+l_wrong <- dev %>%
+  filter(y_pred_l != y) %>%
+  sample_n(100)
+
+l_wrong %>% group_by(ctx_label) %>%
+  summarise(count = n()) %>%
+  kable
+```
+
+### LA
+
+```{r la_context_reqd}
+la_wrong <- dev %>%
+  filter(y_pred_la != y) %>%
+  sample_n(100)
+
+la_wrong %>% group_by(ctx_label) %>%
+  summarise(count = n()) %>%
+  kable
+```
+
+### LAC
+
+```{r lac_context_reqd}
+lac_wrong <- dev %>%
+  filter(y_pred_lac != y) %>%
+  sample_n(100)
+
+lac_wrong %>% group_by(ctx_label) %>%
+  summarise(count = n()) %>%
+  kable
+```
+
+## Section 6: kinds of reasoning required to resolve paragraph-level examples
+
+These are more fine-grained annotations, where I explore what kinds of reasoning are required to resolve the "beyond" (i.e. paragraph or more) context examples. These include the 11 "beyond" examples sampled from the original dev set, as well as the additional examples I categorized from sampling the model errors. This makes 31 "beyond" examples total.
+
+```{r beyond_annot}
+explicit <- c(
+  20, 27, 150, 163, 234, 239, 256, 282, 352, 476, 485
+)
+implicit <- c(
+  185, 300, 343, 415, 493
+)
+err <- c(
+  249, 250, 310, 311
+)
+beyondplus <- c(
+  261, 268, 299, 313, 320, 324, 332, 348, 353, 357, 359
+)
+ctx_type_annots <- data.frame(
+  id = c(explicit, implicit, err, beyondplus),
+  ctx_type = c(rep('explicit', length(explicit)), rep('implicit', length(implicit)), rep('err', length(err)), rep('beyondplus', length(beyondplus)))
+)
+```
+
+In the following table, `beyondplus` are examples where not even the paragraph was sufficient for interpretation; `err` are flat-out errors/debatable/borderline cases; `explicit` are examples requiring explicit coreference resolution; `implicit` are examples which reference an entity or event implicitly (i.e. *ellipsis*).
+
+```{r beyond_reasoning_reqd}
+ctx_type_annots %>%
+  group_by(ctx_type) %>%
+  summarise(count = n()) %>%
+  kable
+```
