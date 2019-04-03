@@ -144,9 +144,9 @@ If this code is useful to you, please cite
 
 ```
 @inproceedings{mu2019learning,
-  author    = {Jesse Mu, Helen Yannakoudakis, and Ekaterina Shutova},
+  author    = {Jesse Mu and Helen Yannakoudakis and Ekaterina Shutova},
   title     = {Learning Outside the Box: Discourse-level Features Improve Metaphor Identification},
-  booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 2 (Short Papers)},
+  booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
   year      = {2019}
 }
 ```
