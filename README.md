@@ -2,6 +2,8 @@
 
 Code and data for "Learning Outside the Box: Discourse-level Features Improve Metaphor Identification", NAACL 2019
 
+https://arxiv.org/abs/1904.02246
+
 ## Getting started
 
 - `analysis/` contains dev set predictions made by the models in the paper, as
