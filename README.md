@@ -12,8 +12,7 @@ https://arxiv.org/abs/1904.02246
   version with additional context + arguments. For details on how to reproduce
   `VUAMC.csv`, see `data/README.md`.
 - `features/` is empty and will contain the extracted model features generated
-    by the `extract_*.py` scripts. Contact me if you're lazy and just want to
-    run classification with the features outright.
+    by the `extract_*.py` scripts. You can also download them directly [here](http://nlp.stanford.edu/data/muj/broader-metaphor-features.tar.gz).
 - `models/` is empty and will contain pretrained doc2vec and skip-thought
     models if you want to reproduce those results. (Pretrained embeddings for
     GloVe and ELMo are handled by spaCy and allennlp, respectively; see below)
